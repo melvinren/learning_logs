@@ -1,9 +1,0 @@
-{
-  "name": "learning_logs_using_react",
-  "version": "1.0.0",
-  "description": "react learning",
-  "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1"
-  }
-}
