@@ -13,31 +13,29 @@ class Topics extends Component{
 				{ "id":2, "name": "vue" }
 			]
 		}
-
-		this.addTopic = this.addTopic.bind(this);
 	}
 	render(){
 		return (
 			<div>
-				<p>Topics</p>
-				<Link to={`${this.props.match.url}/new_topic`}>Add new topic</Link>
-				<ul>				
-				{
-					this.state.topics && this.state.topics.length 
-					? this.state.topics.map(topic => (
-							<li key={topic.id}><Link to={`${this.props.match.url}/${topic.id}`}>{topic.name}</Link></li>
-						))
-					: <li>No topics have been added yet.</li>					
-				}
-				</ul>
-				<Route path={`${this.props.match.url}/:topicId`} component = {Topic} />
-				<Route path={`${this.props.match.url}/new_topic`} component = {newTopic} />
+				<h3>Topics</h3>				
+				<Route exact path={this.props.match.url} render = {()=>(
+					<div>
+						<Link to={`${this.props.match.url}/new_topic`} >Add new topic</Link>
+						<ul>				
+						{						
+							this.state.topics && this.state.topics.length 
+							? this.state.topics.map(topic => (
+									<li key={topic.id}><Link to={`${this.props.match.url}/${topic.id}`}>{topic.name}</Link></li>
+								))
+							: <li>No topics have been added yet.</li>					
+						}
+						</ul>
+					</div>
+				)} />
+				<Route path={`${this.props.match.url}/new_topic`} component={newTopic} />
+				<Route path={`${this.props.match.url}/:topicId(\\d+)`} component={Topic} />				
 			</div>
 			);
-	}
-
-	addTopic(){
-		console.log('add new topic')
 	}
 }
 

@@ -18,11 +18,13 @@ class App extends Component {
         <div>
           <ul>
             <Link to= "/">Home</Link>
+            <Link to= "/about">About</Link>
             <Link to="/topics">Topics</Link>
           </ul>
         </div>
         <hr/>
         <Route exact path='/' component={Home} />    
+        <Route path='/about' render = {() => <div><h2>About</h2></div>} />
         <Route path='/topics' component={Topics} />        
       </div>      
       </Router>
