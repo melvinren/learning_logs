@@ -45,31 +45,104 @@ app.post('/mongo', (req, res)=>{
     })
 })
 
+app.post('/api/topics/get', (req, res)=>{
+    var topic = req.body;        
+    MongoClient.connect(mongo_url, function(err, db){
+        console.log('connect mongo db');
+        
+        if(err){
+            console.error(err)
+            db.close();
+            res.send('connect mongodb fail');
+        }
+        var topics = db.collection('topics');
+        var filter = {};
+        var ObjectID = require('mongodb').ObjectID;
+        if(topic._id){
+            filter = {"_id": new ObjectID(topic._id)};
+        }
+        topics.find(filter).toArray( (err, topics) =>{
+            if(err){
+                console.log('find topic error');
+                db.close()
+                res.send('find topic error')
+            }
+            db.close();
+            res.json(topics);
+        })
+        // db.close();
+        // res.send('connected mongod success');        
+    })
+})
+
 app.post('/api/topic', (req, res)=>{
     var topic = req.body;
-    if(topic._id){
-        //edit
-    }else{
+    console.log(topic);
         //insert
         MongoClient.connect(mongo_url, function(err, db){
             if(err){
                 db.close();
                 res.send(500, {"error": err, "msg":"connect mongo fail"})
                 return;
-            }           
+            }
            
             var topics = db.collection('topics');
-            topics.insertMany([{"text":topic.text, "date": moment().format("YYYY-MM-DD HH:mm:ss")}], (err, result) => {
-                if(err){
+            if(topic._id){
+                var ObjectID = require('mongodb').ObjectID;
+                topics.findOneAndUpdate(
+                        {"_id": new ObjectID(topic._id)}, 
+                        {$set: { text: topic.text, update_date: moment().format("YYYY-MM-DD HH:mm:ss")}}, 
+                        (err, topics) =>{
+                    if(err){
+                        console.log('edit topic error');
+                        db.close()
+                        res.send('edit topic error')
+                    }
                     db.close();
-                    res.send(500, {"error":err, "msg":"insert topic fail"})
-                    return;
-                }
-                db.close();
-                res.send({"success":1});
-            })
-        });
+                    res.send({"success":1});
+                })
+            }else{
+                topics.insertMany([{"text":topic.text, "date": moment().format("YYYY-MM-DD HH:mm:ss")}], (err, result) => {
+                    if(err){
+                        db.close();
+                        res.send(500, {"error":err, "msg":"insert topic fail"})
+                        return;
+                    }
+                    db.close();
+                    res.send({"success":1});
+                })
+            }
+    });
+    
+})
+
+app.post('/api/topic/delete', (req, res)=>{
+    var topic = req.body;
+    if(!topic._id){        
+        console.log('id is empty!')
+        return res.send({"status":"error", "msg": "id is empty!"});        
     }
+    MongoClient.connect(mongo_url, function(err, db){
+        if(err){
+            db.close();
+            res.send(500, {"error": err, "msg":"connect mongo fail"})
+            return;
+        }
+        
+        var topics = db.collection('topics');            
+        var ObjectID = require('mongodb').ObjectID;
+        topics.findOneAndDelete(
+                {"_id": new ObjectID(topic._id)}, 
+                (err, topics) =>{
+            if(err){
+                console.log('edit topic error');
+                db.close()
+                res.send('edit topic error')
+            }
+            db.close();
+            res.send({"success":1});
+        })            
+    });    
 })
 
 var port = 11111;
