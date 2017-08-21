@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import 'whatwg-fetch';
 // import PropTypes from 'prop-types';
-import { Route, Link } from 'react-router-dom'; 
+import { Route, Link, Switch, Redirect } from 'react-router-dom'; 
 import Topic from './Topic';
 
 class Topics extends Component{
@@ -8,12 +9,23 @@ class Topics extends Component{
 		super(props)
 
 		this.state = {
-			topics: [
-				{ "id":1, "name": "react" },
-				{ "id":2, "name": "vue" }
-			]
+			topics: []
 		}
 	}
+
+	componentWillMount(){
+		fetch('http://localhost:11111/api/topics/get',{
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/json;charset=utf-8'
+			}
+		}).then((response)=>{
+			return response.json()
+		}).then((topics)=>{
+			this.setState({topics:topics});
+		});
+	}
+
 	render(){
 		return (
 			<div>
@@ -25,25 +37,57 @@ class Topics extends Component{
 						{						
 							this.state.topics && this.state.topics.length 
 							? this.state.topics.map(topic => (
-									<li key={topic.id}><Link to={`${this.props.match.url}/${topic.id}`}>{topic.name}</Link></li>
+									<li key={topic._id}><Link to={`${this.props.match.url}/${topic._id}`}>{topic.text}</Link></li>
 								))
 							: <li>No topics have been added yet.</li>					
 						}
 						</ul>
 					</div>
 				)} />
-				<Route path={`${this.props.match.url}/new_topic`} component={newTopic} />
-				<Route path={`${this.props.match.url}/:topicId(\\d+)`} component={Topic} />				
+				<Switch>
+					<Route path={`${this.props.match.url}/new_topic`} component={newTopic} />
+					<Route path={`${this.props.match.url}/:topicId`} component={Topic} />			
+				</Switch>
 			</div>
-			);
+			);	
 	}
 }
 
-const newTopic = ()=>(
-	<div>
-		<input /><button>Add</button>
-	</div>
-	);
+class newTopic extends Component{
+	constructor(props){
+		super(props);
+		this.newTopic = this.newTopic.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.state = { text: ''}
+	}
+	render(){
+		return (
+			<div>
+				<input onChange={this.handleChange} value={this.state.text}/><button onClick={this.newTopic}>Add</button>
+			</div>
+		);
+	}
+	handleChange(e) {
+		this.setState({text: e.target.value});
+	}
+	newTopic(){
+		if(!this.state.text){
+			return;
+		}
+		fetch('http://localhost:11111/api/topic',{
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({text: this.state.text})
+		}).then((response)=>{
+			return response.json()
+		}).then((json)=>{
+			console.log(json);
+			// return <Redirect to={`${this.props.match.url.replace('/new_topic','')}`} ></Redirect>
+		});		
+	}
+}
 
 // class Topic extends Component{
 // 	constructor(props){
