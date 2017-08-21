@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 
 app.all('*', (req, res, next) =>{
     res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
     next();
 })
 
@@ -23,7 +24,7 @@ app.get('/', (req,res) => {
 app.post('/mongo', (req, res)=>{
     
     MongoClient.connect(mongo_url, function(err, db){
-        console.log('connect mongo db');
+        // console.log('connect mongo db');
         
         if(err){
             console.error(err)
@@ -48,7 +49,7 @@ app.post('/mongo', (req, res)=>{
 app.post('/api/topics/get', (req, res)=>{
     var topic = req.body;        
     MongoClient.connect(mongo_url, function(err, db){
-        console.log('connect mongo db');
+        // console.log('connect mongo db');
         
         if(err){
             console.error(err)
