@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch';
 // import PropTypes from 'prop-types';
-import { Route, Link, Switch, Redirect } from 'react-router-dom'; 
+import { Route, Link, Switch } from 'react-router-dom'; 
 import Topic from './Topic';
 
 class Topics extends Component{
 	constructor(props){
 		super(props)
+
+		this.updateTopics = this.updateTopics.bind(this);
+		this.deleteTopic = this.deleteTopic.bind(this);
 
 		this.state = {
 			topics: []
@@ -26,6 +29,29 @@ class Topics extends Component{
 		});
 	}
 
+	updateTopics(topics){
+		var temp_topics = this.state.topics;
+		temp_topics = temp_topics.concat(topics);
+		this.setState({topics: temp_topics});
+	}
+
+	deleteTopic(topicId){		
+		fetch('http://localhost:11111/api/topic/delete',{
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify({_id: topicId})
+		}).then((response)=>{
+			return response.json()
+		}).then((json)=>{
+			var temp_topics = this.state.topics;
+			var topic_index = temp_topics.findIndex(t=> t._id === topicId)
+			temp_topics.splice(topic_index, 1);
+			this.setState({topics: temp_topics});
+		});
+	}
+
 	render(){
 		return (
 			<div>
@@ -37,7 +63,11 @@ class Topics extends Component{
 						{						
 							this.state.topics && this.state.topics.length 
 							? this.state.topics.map(topic => (
-									<li key={topic._id}><Link to={`${this.props.match.url}/${topic._id}`}>{topic.text}</Link></li>
+									<li key={topic._id}>
+										<Link to={`${this.props.match.url}/${topic._id}`}>{topic.text}</Link> 
+										<Link to={`${this.props.match.url}/${topic._id}/edit`}>Edit</Link>
+										<button onClick={ (e) => this.deleteTopic(topic._id) }>DELETE</button>
+									</li>
 								))
 							: <li>No topics have been added yet.</li>					
 						}
@@ -45,67 +75,13 @@ class Topics extends Component{
 					</div>
 				)} />
 				<Switch>
-					<Route path={`${this.props.match.url}/new_topic`} component={newTopic} />
-					<Route path={`${this.props.match.url}/:topicId`} component={Topic} />			
+					<Route path={`${this.props.match.url}/new_topic`} render = { (props) => <Topic {...props} topics = {this.state.topics} add={true} updateTopics = { this.updateTopics } /> }/>
+					<Route exact path={`${this.props.match.url}/:topicId`} render = { (props) => <Topic {...props} topics = {this.state.topics}  /> } />	
+					<Route path={`${this.props.match.url}/:topicId/edit`} render = { (props) => <Topic {...props} topics = {this.state.topics} edit={true} /> } />			
 				</Switch>
 			</div>
 			);	
 	}
 }
-
-class newTopic extends Component{
-	constructor(props){
-		super(props);
-		this.newTopic = this.newTopic.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.state = { text: ''}
-	}
-	render(){
-		return (
-			<div>
-				<input onChange={this.handleChange} value={this.state.text}/><button onClick={this.newTopic}>Add</button>
-			</div>
-		);
-	}
-	handleChange(e) {
-		this.setState({text: e.target.value});
-	}
-	newTopic(){
-		if(!this.state.text){
-			return;
-		}
-		fetch('http://localhost:11111/api/topic',{
-			method: 'POST',
-			headers: {
-			    'Content-Type': 'application/json;charset=utf-8'
-			},
-			body: JSON.stringify({text: this.state.text})
-		}).then((response)=>{
-			return response.json()
-		}).then((json)=>{
-			console.log(json);
-			// return <Redirect to={`${this.props.match.url.replace('/new_topic','')}`} ></Redirect>
-		});		
-	}
-}
-
-// class Topic extends Component{
-// 	constructor(props){
-// 		super(props);
-// 		this.clickHandle = this.clickHandle.bind(this);
-// 	}
-// 	render(){
-// 		return(
-// 			<li onClick={this.clickHandle}><a href="#">{this.props.topic.name}</a></li>
-// 		)
-// 	}
-
-// 	clickHandle(e){
-// 		console.log(this.props.topic);
-// 	}
-// }
-// Topic.PropTypes = {
-// 	topic: PropTypes.object.isRequired,
-// }
 
 export default Topics;

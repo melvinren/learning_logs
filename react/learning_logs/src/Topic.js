@@ -3,27 +3,62 @@ import React, { Component } from 'react';
 class Topic extends Component{
 	constructor(props){
 		super(props);
-		this.state = {
-			topic: null
+
+		this.handleChange = this.handleChange.bind(this);
+		this.updateTopic = this.updateTopic.bind(this);
+		
+		const defaultTopic =  { _id: '', text: '' };
+
+		if(props.topics && props.topics.length && this.props.match.params.topicId){
+			this.state = {
+				topic : props.topics.find(t => t._id === this.props.match.params.topicId) || defaultTopic
+			}
+		}else{
+			this.state = {
+				topic: defaultTopic
+			}
 		}
 	}
 
-	componentWillMount(){
-		fetch('http://localhost:11111/api/topics/get',{
+	handleChange(e) {
+		let temp_topic = this.state.topic;
+		temp_topic.text = e.target.value;
+		this.setState({ topic: temp_topic });
+	}
+	updateTopic(){
+		if(!this.state.topic.text){
+			return;
+		}
+		fetch('http://localhost:11111/api/topic',{
 			method: 'POST',
 			headers: {
 			    'Content-Type': 'application/json;charset=utf-8'
 			},
-			body: JSON.stringify({ _id: this.props.match.params.topicId })
+			body: JSON.stringify(this.state.topic)
 		}).then((response)=>{
 			return response.json()
-		}).then((topics)=>{
-			const topic = topics && topics[0];
-			this.setState({topic:topic});
-		});
+		}).then((json)=>{
+			console.log(json);
+			if(json.topics){
+				this.props.updateTopics && this.props.updateTopics(json.topics);
+			}
+			this.props.history.goBack();
+		});		
 	}
 
 	render(){
+		const add = this.props.add || false;
+		const edit = this.props.edit || false;
+		
+		const btnTxt = add ? "Add" : "Save";
+		if(add || edit){
+			return (
+				<div>
+					<input type="text" onChange={this.handleChange} value={this.state.topic.text}/><button onClick={this.updateTopic}>{btnTxt}</button>
+				</div>
+			)
+		}
+
 		if(!this.state.topic){
 			return (<div>Donot have this topic.</div>)
 		}
@@ -44,6 +79,7 @@ class Topic extends Component{
 				</ul>
 			</div>
 			);
+		
 	}
 }
 

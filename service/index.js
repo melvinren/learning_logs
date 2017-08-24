@@ -110,7 +110,7 @@ app.post('/api/topic', (req, res)=>{
                         return;
                     }
                     db.close();
-                    res.send({"success":1});
+                    res.send({"success":1, topics: result.ops});
                 })
             }
     });
