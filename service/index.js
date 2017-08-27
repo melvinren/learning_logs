@@ -92,7 +92,7 @@ app.post('/api/topic', (req, res)=>{
                 var ObjectID = require('mongodb').ObjectID;
                 topics.findOneAndUpdate(
                         {"_id": new ObjectID(topic._id)}, 
-                        {$set: { text: topic.text, update_date: moment().format("YYYY-MM-DD HH:mm:ss")}}, 
+                        {$set: { text: topic.text, entries: topic.entries, update_date: moment().format("YYYY-MM-DD HH:mm:ss")}}, 
                         (err, topics) =>{
                     if(err){
                         console.log('edit topic error');
