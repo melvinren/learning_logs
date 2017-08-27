@@ -17,7 +17,7 @@ class Topics extends Component{
 	}
 
 	componentWillMount(){
-		fetch('http://localhost:11111/api/topics/get',{
+		fetch('/api/topics/get',{
 			method: 'POST',
 			headers: {
 			    'Content-Type': 'application/json;charset=utf-8'
@@ -36,7 +36,7 @@ class Topics extends Component{
 	}
 
 	deleteTopic(topicId){		
-		fetch('http://localhost:11111/api/topic/delete',{
+		fetch('/api/topic/delete',{
 			method: 'POST',
 			headers: {
 			    'Content-Type': 'application/json;charset=utf-8'
@@ -53,6 +53,7 @@ class Topics extends Component{
 	}
 
 	render(){
+		// console.log(this.props.match.url);
 		return (
 			<div>
 				<h3>Topics</h3>				
@@ -75,9 +76,9 @@ class Topics extends Component{
 					</div>
 				)} />
 				<Switch>
-					<Route path={`${this.props.match.url}/new_topic`} render = { (props) => <Topic {...props} topics = {this.state.topics} add={true} updateTopics = { this.updateTopics } /> }/>
-					<Route exact path={`${this.props.match.url}/:topicId`} render = { (props) => <Topic {...props} topics = {this.state.topics}  /> } />	
+					<Route path={`${this.props.match.url}/new_topic`} render = { (props) => <Topic {...props} topics = {this.state.topics} add={true} updateTopics = { this.updateTopics } /> }/>					
 					<Route path={`${this.props.match.url}/:topicId/edit`} render = { (props) => <Topic {...props} topics = {this.state.topics} edit={true} /> } />			
+					<Route path={`${this.props.match.url}/:topicId`} render = { (props) => <Topic {...props} topics = {this.state.topics}  /> } />	
 				</Switch>
 			</div>
 			);	

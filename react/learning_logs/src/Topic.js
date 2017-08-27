@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Route, Link } from 'react-router-dom'; 
+import NewEntry from './NewEntry';
 
 class Topic extends Component{
 	constructor(props){
@@ -29,7 +31,7 @@ class Topic extends Component{
 		if(!this.state.topic.text){
 			return;
 		}
-		fetch('http://localhost:11111/api/topic',{
+		fetch('/api/topic',{
 			method: 'POST',
 			headers: {
 			    'Content-Type': 'application/json;charset=utf-8'
@@ -46,7 +48,7 @@ class Topic extends Component{
 		});		
 	}
 
-	render(){
+	render(){		
 		const add = this.props.add || false;
 		const edit = this.props.edit || false;
 		
@@ -62,21 +64,27 @@ class Topic extends Component{
 		if(!this.state.topic){
 			return (<div>Donot have this topic.</div>)
 		}
-		return (
+		return (			
 			<div>
 				<p key={this.state.topic._id}><strong>{this.state.topic.text}</strong></p>
-				<ul>
-				{					
-					this.state.topic.entries && this.state.topic.entries.length
-						? this.state.topic.entries.map(entry => (
-							<li key={entry.id}>
-								<p>{entry.date}</p>
-								<p>{entry.text}</p>
-							</li>
-							))
-						: <li>No entry.</li>					
-				}
-				</ul>
+				<Route exact path={this.props.match.url} render = {()=>(
+					<div>
+					<ul>
+					{					
+						this.state.topic.entries && this.state.topic.entries.length
+							? this.state.topic.entries.map(entry => (
+								<li key={entry.date}>
+									<p>{entry.date}</p>
+									<p>{entry.text}</p>
+								</li>
+								))
+							: <li>No entry.</li>					
+					}
+					</ul>
+					<Link to={`${this.props.match.url}/new_entry`} >Add new entry</Link>
+					</div>
+				)} />				
+				<Route path={`${this.props.match.url}/new_entry`}  render = {(props)=> <NewEntry {...props} topic = {this.state.topic} />} />
 			</div>
 			);
 		
