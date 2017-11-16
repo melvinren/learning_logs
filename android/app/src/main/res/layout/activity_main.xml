@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#c5c5c5"
+    android:fitsSystemWindows="true">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -24,7 +26,7 @@
         android:layout_width="match_parent"
         app:itemBackground="@color/colorPrimary"
         android:layout_height="56dp"
-        app:itemIconTint="#ffffff"
-        app:itemTextColor="@color/colorAccent"
+        app:itemIconTint="@drawable/bottom_navigation_color_selector"
+        app:itemTextColor="@drawable/bottom_navigation_color_selector"
         app:menu="@menu/bottom_navigation_items" />
 </LinearLayout>
