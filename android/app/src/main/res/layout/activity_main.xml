@@ -6,12 +6,19 @@
     android:background="#c5c5c5"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-    </FrameLayout>
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:visibility="gone"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
+</FrameLayout>
 
     <!--<Button-->
         <!--android:id="@+id/goto_topiclist"-->

@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    private  ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_main);
-        ReplaceFragment(new HomeFragment());
+
+        // init home fragement
+//        ReplaceFragment(new HomeFragment());
 
 //        Button goto_topiclist = (Button)findViewById(R.id.goto_topiclist);
 //        goto_topiclist.setOnClickListener(new View.OnClickListener() {
@@ -38,29 +42,57 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        final BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = new Fragment();
-                switch (item.getItemId()){
-                    case R.id.action_home:
-                        fragment = new HomeFragment();
-                        break;
-                    case R.id.action_topics:
-                        fragment = new TopicListFragment();
-                        break;
-                    case R.id.action_about:
-                        fragment = new AboutFragment();
-                        break;
-                    default:break;
-                }
-                ReplaceFragment(fragment);
+//                SwitchFragment(item.getItemId());
+                SwitchViewPager(item.getItemId());
                 item.setChecked(true);
                 return false;
             }
         });
 
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new HomeFragment());
+        adapter.addFragment(new TopicListFragment());
+        adapter.addFragment(new AboutFragment());
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void SwitchFragment(int id){
+        Fragment fragment = new Fragment();
+        switch (id){
+            case R.id.action_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.action_topics:
+                fragment = new TopicListFragment();
+                break;
+            case R.id.action_about:
+                fragment = new AboutFragment();
+                break;
+            default:break;
+        }
+        ReplaceFragment(fragment);
     }
 
     private void ReplaceFragment(Fragment fragment){
@@ -70,4 +102,18 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    private void SwitchViewPager(int id){
+        switch (id){
+            case R.id.action_home:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.action_topics:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.action_about:
+                viewPager.setCurrentItem(2);
+                break;
+            default:break;
+        }
+    }
 }
