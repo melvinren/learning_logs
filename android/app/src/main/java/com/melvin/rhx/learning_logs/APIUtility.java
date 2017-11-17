@@ -18,8 +18,9 @@ public class APIUtility {
     private static final String apihost = "http://192.168.0.230:11111";
     private static final String topicListApi = "/api/topics/get";
 
-    public static List<Topic> getTopics(){
-        String response = SendRequest(apihost+topicListApi);
+    public static List<Topic> getTopics(int pageIndex){
+        String requestUrl = apihost+topicListApi+"/"+pageIndex;
+        String response = SendRequest(requestUrl);
         List<Topic> topics = new ArrayList<>();
         if(response!=null && !TextUtils.isEmpty(response)) {
             topics = JSON.parseArray(response, Topic.class);

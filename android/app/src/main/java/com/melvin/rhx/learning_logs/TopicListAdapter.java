@@ -17,7 +17,7 @@ import java.util.List;
 
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
 
-    private List<Topic> topics;
+    public List<Topic> topics;
 
     public TopicListAdapter(List<Topic> topics){
         this.topics = topics;

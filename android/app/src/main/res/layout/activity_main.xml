@@ -27,6 +27,12 @@
         <!--android:text="Goto Topics"-->
         <!--android:textAllCaps="false"/>-->
 
+    <!--<Button-->
+        <!--android:id="@+id/goto_tabs"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Goto Tabs"/>-->
+
     <android.support.design.widget.BottomNavigationView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_navigation"

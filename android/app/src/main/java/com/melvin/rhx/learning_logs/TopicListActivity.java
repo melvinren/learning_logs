@@ -42,7 +42,7 @@ public class TopicListActivity extends AppCompatActivity {
 
             @Override
             protected Object doInBackground(Object[] objects) {
-                return APIUtility.getTopics();
+                return APIUtility.getTopics(0);
             }
 
             @Override

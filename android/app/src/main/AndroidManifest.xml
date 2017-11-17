@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TopicListActivity" />
-        <activity android:name=".TopicItemActivity"></activity>
+        <activity android:name=".TopicItemActivity" />
+        <activity android:name=".TabsActivity"></activity>
     </application>
 
 </manifest>

@@ -4,11 +4,27 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/loading" android:id="@+id/list_loading" android:visibility="gone" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/topiclist_viewlist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
     </android.support.v7.widget.RecyclerView>
+    <FrameLayout
+        android:id="@+id/list_loading"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+        <include layout="@layout/loading"  />
+    </FrameLayout>
+    <TextView
+        android:id="@+id/alltopics_loaded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:text="已经是最后一条数据了"
+        android:visibility="gone"/>
 
 </LinearLayout>
