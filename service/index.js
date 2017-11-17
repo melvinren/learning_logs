@@ -46,8 +46,10 @@ app.post('/mongo', (req, res)=>{
     })
 })
 
-app.post('/api/topics/get', (req, res)=>{
+app.post('/api/topics/get/:pageIndex?/:pageSize?', (req, res)=>{
     var topic = req.body;        
+    let pageIndex = req.params.pageIndex || 1;
+    let pageSize = parseInt(req.params.pageSize) || 10;    
     MongoClient.connect(mongo_url, function(err, db){
         // console.log('connect mongo db');
         
@@ -62,7 +64,7 @@ app.post('/api/topics/get', (req, res)=>{
         if(topic._id){
             filter = {"_id": new ObjectID(topic._id)};
         }
-        topics.find(filter).toArray( (err, topics) =>{
+        topics.find(filter).skip((pageIndex-1)*pageSize).limit(pageSize).toArray( (err, topics) =>{
             if(err){
                 console.log('find topic error');
                 db.close()
