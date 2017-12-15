@@ -1,6 +1,7 @@
 package com.melvin.rhx.learning_logs;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.melvin.rhx.learning_logs.model.Topic;
@@ -24,6 +25,12 @@ public class APIUtility {
         List<Topic> topics = new ArrayList<>();
         if(response!=null && !TextUtils.isEmpty(response)) {
             topics = JSON.parseArray(response, Topic.class);
+        }
+//        Log.i("API response:", "getTopics: "+response);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return topics;
     }

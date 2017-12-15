@@ -8,8 +8,19 @@
         android:id="@+id/topiclist_viewlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:visibility="gone">
     </android.support.v7.widget.RecyclerView>
+    <com.melvin.rhx.learning_logs.xrecyclerview.XRecyclerView
+        android:id="@+id/topiclist_xlist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        >
+
+    </com.melvin.rhx.learning_logs.xrecyclerview.XRecyclerView>
     <FrameLayout
         android:id="@+id/list_loading"
         android:visibility="gone"
