@@ -64,7 +64,7 @@ app.post('/api/topics/get/:pageIndex?/:pageSize?', (req, res)=>{
         if(topic._id){
             filter = {"_id": new ObjectID(topic._id)};
         }
-        topics.find(filter).skip((pageIndex-1)*pageSize).limit(pageSize).toArray( (err, topics) =>{
+        topics.find(filter).sort({update_date:-1}).skip((pageIndex-1)*pageSize).limit(pageSize).toArray( (err, topics) =>{
             if(err){
                 console.log('find topic error');
                 db.close()
@@ -105,7 +105,8 @@ app.post('/api/topic', (req, res)=>{
                     res.send({"success":1});
                 })
             }else{
-                topics.insertMany([{"text":topic.text, "date": moment().format("YYYY-MM-DD HH:mm:ss")}], (err, result) => {
+                const date = moment().format("YYYY-MM-DD HH:mm:ss");
+                topics.insertMany([{"text":topic.text, "date": date, "update_date":date}], (err, result) => {
                     if(err){
                         db.close();
                         res.send(500, {"error":err, "msg":"insert topic fail"})

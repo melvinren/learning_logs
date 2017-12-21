@@ -1,15 +1,17 @@
 package com.melvin.rhx.learning_logs;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.melvin.rhx.learning_logs.model.SimpleResponse;
 import com.melvin.rhx.learning_logs.model.Topic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.List;
 public class APIUtility {
     private static final String apihost = "http://192.168.0.230:11111";
     private static final String topicListApi = "/api/topics/get";
+    private static final String saveTopicApi = "/api/topic";
 
     public static List<Topic> getTopics(int pageIndex){
         String requestUrl = apihost+topicListApi+"/"+pageIndex;
@@ -27,15 +30,15 @@ public class APIUtility {
             topics = JSON.parseArray(response, Topic.class);
         }
 //        Log.i("API response:", "getTopics: "+response);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return topics;
     }
+    @NonNull
+    private static String SendRequest(final String address) {
+        return SendRequest(address, null);
+    }
 
-    public static String SendRequest(final String address) {
+    @NonNull
+    private static String SendRequest(final String address, final String body) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         try {
@@ -44,6 +47,12 @@ public class APIUtility {
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
+            connection.setRequestProperty("Content-Type","application/json");
+            if(body!=null && body.length()>0){
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(body.getBytes("UTF-8"));
+                outputStream.close();
+            }
             InputStream in = connection.getInputStream();
             reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder response = new StringBuilder();
@@ -68,4 +77,17 @@ public class APIUtility {
         }
         return "";
     }
+
+    public static boolean SaveTopic(final Topic topic){
+        String requestUrl = apihost+saveTopicApi;
+        String response = SendRequest(requestUrl, JSON.toJSONString(topic));
+        if(response!=null && !TextUtils.isEmpty(response)) {
+            SimpleResponse obj = JSON.parseObject(response,SimpleResponse.class);
+            if(obj !=null && "1".equals(obj.getSuccess())){
+                return true;
+            }
+        }
+        return false;
+    }
 }
+

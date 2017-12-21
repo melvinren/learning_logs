@@ -20,7 +20,8 @@
         </activity>
         <activity android:name=".TopicListActivity" />
         <activity android:name=".TopicItemActivity" />
-        <activity android:name=".TabsActivity"></activity>
+        <activity android:name=".TabsActivity" />
+        <activity android:name=".AddTopicActivity"></activity>
     </application>
 
 </manifest>

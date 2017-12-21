@@ -1,8 +1,10 @@
 package com.melvin.rhx.learning_logs;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melvin.rhx.learning_logs.model.Topic;
 import com.melvin.rhx.learning_logs.xrecyclerview.XRecyclerView;
@@ -29,6 +32,8 @@ public class TopicListFragment extends Fragment {
 
     private FrameLayout loadingLayout;
 
+    private FloatingActionButton addButton;
+
     private TopicListAdapter adapter;
 
     private int pageIndex=1;
@@ -42,13 +47,14 @@ public class TopicListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i("TEST", "onCreateView: TopicListFragment");
         return inflater.inflate(R.layout.fragment_topiclist, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        Log.i("TEST", "onActivityCreated: TopicListFragment");
 
         topiclistview = (RecyclerView)getActivity().findViewById(R.id.topiclist_viewlist);
         topiclistview.setHasFixedSize(true);
@@ -94,8 +100,38 @@ public class TopicListFragment extends Fragment {
             }
         });
         LoadTopics4X(pageIndex);
+
+        addButton = (FloatingActionButton) getActivity().findViewById(R.id.add_topic);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddTopicActivity.class);
+                startActivityForResult(intent, 10000);
+            }
+        });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("TEST", "onDestroy: TopicListFragment");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("onActivityResult", "onActivityResult: "+requestCode);
+        switch (requestCode){
+            case 10000:
+                ReloadTopicList();
+                break;
+            default:break;
+        }
+    }
+
+    private void ReloadTopicList(){
+        pageIndex = 1;
+        LoadTopics4X(pageIndex, true);
+    }
 
     private void LoadTopics(final int pageIndex){
         AsyncTask asyncTask = new AsyncTask() {
