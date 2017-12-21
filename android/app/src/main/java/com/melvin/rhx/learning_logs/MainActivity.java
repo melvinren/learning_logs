@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private  ViewPager viewPager;
@@ -116,15 +117,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SwitchViewPager(int id){
+        int currentItem = viewPager.getCurrentItem();
         switch (id){
             case R.id.action_home:
-                viewPager.setCurrentItem(0);
+                viewPager.setCurrentItem(0, currentItem == 1);
                 break;
             case R.id.action_topics:
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(1, (currentItem == 2 || currentItem == 0));
                 break;
             case R.id.action_about:
-                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(2, (currentItem == 1));
                 break;
             default:break;
         }

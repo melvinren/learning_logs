@@ -210,10 +210,6 @@ public class TopicListFragment extends Fragment {
       LoadTopics4X(pageIndex, false);
     }
 
-    private void FillTopicList4X(List<Topic> topics){
-        FillTopicList4X(topics, false);
-    }
-
     private void FillTopicList4X(List<Topic> topics, boolean reset){
         loading = false;
         if(adapter == null) {
