@@ -3,7 +3,7 @@
     <img src="./assets/logo.png">
     <div class="nav">
       <div class="item"><router-link :to="{name:'Home'}">Home</router-link></div>
-      <div class="item"><router-link :to="{name:'Topics'}">Topics</router-link></div>
+      <div class="item"><router-link :to="{name:'Topics', params: { pageIndex: 1 }}">Topics</router-link></div>
       <div class="item"><router-link :to="{name:'About'}">About</router-link></div>
     </div>    
     <hr/>
