@@ -64,14 +64,25 @@ app.post('/api/topics/get/:pageIndex?/:pageSize?', (req, res)=>{
         if(topic._id){
             filter = {"_id": new ObjectID(topic._id)};
         }
-        topics.find(filter).sort({update_date:-1}).skip((pageIndex-1)*pageSize).limit(pageSize).toArray( (err, topics) =>{
+        topics.find(filter).count((err, count) =>{
             if(err){
                 console.log('find topic error');
                 db.close()
                 res.send('find topic error')
             }
-            db.close();
-            res.json(topics);
+            if(count<=0){
+                db.close();
+                res.json({count,topics});
+            }
+            topics.find(filter).sort({update_date:-1}).skip((pageIndex-1)*pageSize).limit(pageSize).toArray( (err, topics) =>{
+                if(err){
+                    console.log('find topic error');
+                    db.close()
+                    res.send('find topic error')
+                }
+                db.close();
+                res.json({count,topics});
+            })
         })
         // db.close();
         // res.send('connected mongod success');        
