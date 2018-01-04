@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Home from './Home';
-import Topics from './Topics';
+// import Topics from './Topics';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
+
+import Topics from './containers/topics'
+import { Provider } from 'react-redux'
+import configureStore from './store'
+const store = configureStore()
 
 class App extends Component {
   render() {
@@ -25,7 +30,7 @@ class App extends Component {
         <hr/>
         <Route exact path='/' component={Home} />    
         <Route path='/about' render = {() => <div><h2>About</h2></div>} />
-        <Route path='/topics' component={Topics} />        
+        <Route path='/topics' render = {() => <Provider store={store}><Topics /></Provider>}/>        
       </div>      
       </Router>
     );

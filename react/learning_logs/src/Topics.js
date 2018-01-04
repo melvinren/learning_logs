@@ -24,8 +24,8 @@ class Topics extends Component{
 			}
 		}).then((response)=>{
 			return response.json()
-		}).then((topics)=>{
-			this.setState({topics:topics});
+		}).then((data)=>{
+			this.setState({topics:data.topics});
 		});
 	}
 
