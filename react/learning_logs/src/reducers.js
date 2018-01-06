@@ -5,7 +5,8 @@ import {
     DELETE_TOPIC,
     SELECT_TOPIC,
     RECEIVE_TOPICS,
-    NEW_TOPIC
+    NEW_TOPIC,
+    UPDATE_TOPIC
 } from './actions'
 
 function topics(state =  [], action) {
@@ -36,6 +37,14 @@ function topics(state =  [], action) {
             } else {
                 return state
             }
+        case UPDATE_TOPIC:
+            if(action.success === 1 && action.topic){
+                const topics = state.slice(0)                
+                topics.unshift(action.topic)
+                return topics
+            } else {
+                return state
+            }
         case RECEIVE_TOPICS:
             return action.topics;
         default:
@@ -46,7 +55,20 @@ function topics(state =  [], action) {
 function topic(state = {}, action){
     switch(action.type){
         case SELECT_TOPIC:
-            return action.topic
+            if(action.topicId){
+                return action.topics.find(t=> t._id === action.topicId)
+            }else{
+                return  { _id: '', text: '' }
+            }       
+        case UPDATE_TOPIC:
+            if(action.success === 1){
+                if(action.topic){
+                    return Object.assign({},action.topic, { saved: true })
+                }                
+                return { ...state, saved: true }
+            } else {
+                return state
+            }            
         default:
             return state
     }

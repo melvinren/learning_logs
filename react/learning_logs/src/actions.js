@@ -11,6 +11,10 @@ export const SELECT_TOPIC = "SELECT_TOPIC"
 export const REQUEST_TOPICS = "REQUEST_TOPICS"
 export const RECEIVE_TOPICS = "RECEIVE_TOPICS"
 
+export const UPDATE_TOPIC = "UPDATE_TOPIC"
+
+export const BACK_TO_TOPICS = 'BACK_TO_TOPICS'
+
 
 function receiveTopics(data) {
     return { type: RECEIVE_TOPICS, topics: data.topics }
@@ -82,7 +86,7 @@ function _deleteTopic(topicId){
     }).then((response)=>{
         return response.json()
     }).then((json)=>{
-        dispatch({ type: DELETE_TOPIC, success:json.success, topicId })
+        return dispatch({ type: DELETE_TOPIC, success:json.success, topicId })
     });
 }
 
@@ -92,6 +96,33 @@ export function deleteTopic(id) {
     }
 }
 
-export function selectTopic(topic){
-    return { type: SELECT_TOPIC, topic}
+export function selectTopic(topics, topicId){
+    return { type: SELECT_TOPIC, topics, topicId }
+}
+
+function _updateTopic(topic){
+    return dispatch => {
+        fetch('/api/topic/',{
+			method: 'POST',
+			headers: {
+			    'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify(topic)
+		}).then((response)=>{
+			return response.json()
+		}).then((json)=>{			
+            return dispatch({ type: UPDATE_TOPIC, success:json.success, topic: json.topics && json.topics[0] })
+		});	        
+    }
+}
+export function updateTopic(topic){
+    return (dispatch, getState) => {
+        return dispatch(_updateTopic(topic))
+    }
+}
+
+export function backToTopics(props){
+    const { history } = props
+    history.goBack()
+    return { type: BACK_TO_TOPICS }
 }
