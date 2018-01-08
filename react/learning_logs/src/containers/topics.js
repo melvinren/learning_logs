@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { fetchTopics, deleteTopic } from '../actions'
 import { Route, Link, Switch } from 'react-router-dom'; 
 import Topic from './topic'
+import '../Topics.css'
 
 class Topics extends Component{
 	constructor(props){
@@ -11,30 +12,39 @@ class Topics extends Component{
 	}
 
 	componentWillMount(){        
-        this.props.dispatch(fetchTopics())		
+        this.props.dispatch(fetchTopics())
 	}
 
 	deleteTopic(topicId){		
 		this.props.dispatch(deleteTopic(topicId))
 	}
 
-	render(){
-        console.log(this.props.match.url);
+	render(){        
         const { topics, match } = this.props        
         return (
-        <div>
-            <h3><Link to={match.url} >Topics</Link></h3>
+        <div className="topics">
+            <h4><Link to={match.url} >Topics</Link></h4>
             <Route exact path={match.url} render = {()=>(
-                <div>
-                    <Link to={`${match.url}/new_topic`} >Add new topic</Link>
+                <div className="topics_wrap">
+                    <Link to={`${match.url}/new_topic`} className="btn btn_add" >Add topic</Link>
                     <ul>				
                     {						
                         topics && topics.length 
-                        ? topics.map(topic => (
+                        ? topics.map(topic => (                            
                                 <li key={topic._id}>
-                                    <Link to={`${match.url}/${topic._id}`}>{topic.text}</Link> 
-                                    <Link to={`${match.url}/${topic._id}/edit`}>Edit</Link>
-                                    <button onClick={ (e) => this.deleteTopic(topic._id) }>DELETE</button>
+                                  <div className="topic_wrap">                                    
+                                    <Link to={`${match.url}/${topic._id}`}  className="left">{topic.text}</Link>                                     
+                                    <div className="right">
+                                    <Link to={`${match.url}/${topic._id}/edit`} className="btn btn_edit">
+                                        <span>EDIT</span>
+                                        <i className="icon">E</i>
+                                    </Link>
+                                    <a className="btn btn_delete" onClick={ (e) => this.deleteTopic(topic._id) }>
+                                        <span>DELETE</span>
+                                        <i className="icon">X</i>
+                                    </a>
+                                    </div>
+                                  </div>
                                 </li>
                             ))
                         : <li>No topics have been added yet.</li>					

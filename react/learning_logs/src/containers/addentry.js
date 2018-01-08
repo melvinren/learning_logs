@@ -19,7 +19,7 @@ class NewEntry extends Component {
 		this.props.topic.entries = this.props.topic.entries || []
 		this.props.topic.entries.push(newentry);
 
-		this.props.dispatch(updateTopic(this.props.topic))
+		this.props.dispatch(updateTopic(this.props.topic)).then(()=>this.props.history.goBack())
 	}
 
 	render(){		

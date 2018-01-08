@@ -13,8 +13,6 @@ export const RECEIVE_TOPICS = "RECEIVE_TOPICS"
 
 export const UPDATE_TOPIC = "UPDATE_TOPIC"
 
-export const BACK_TO_TOPICS = 'BACK_TO_TOPICS'
-
 
 function receiveTopics(data) {
     return { type: RECEIVE_TOPICS, topics: data.topics }
@@ -22,16 +20,15 @@ function receiveTopics(data) {
 
 // thunk
 function _fetchTopics(filter) {
-    return dispatch => {        
-        fetch('/api/topics/get',{
+    return dispatch => 
+         fetch('/api/topics/get',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             }
         }).then((response)=>{
             return response.json()
-        }).then(json => dispatch(receiveTopics(json)))
-    }
+        }).then(json => dispatch(receiveTopics(json)))    
 }
 
 export function fetchTopics(filter){
@@ -50,8 +47,7 @@ export function newTopic(text){
 }
 
 function _addTopic(topic){
-    return dispatch =>
-        fetch('/api/topic',{
+    return dispatch => fetch('/api/topic',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -101,7 +97,7 @@ export function selectTopic(topics, topicId){
 }
 
 function _updateTopic(topic){
-    return dispatch => {
+    return dispatch => 
         fetch('/api/topic/',{
 			method: 'POST',
 			headers: {
@@ -112,17 +108,10 @@ function _updateTopic(topic){
 			return response.json()
 		}).then((json)=>{			
             return dispatch({ type: UPDATE_TOPIC, success:json.success, topic: json.topics && json.topics[0] })
-		});	        
-    }
+		});
 }
 export function updateTopic(topic){
     return (dispatch, getState) => {
         return dispatch(_updateTopic(topic))
     }
-}
-
-export function backToTopics(props){
-    const { history } = props
-    history.goBack()
-    return { type: BACK_TO_TOPICS }
 }

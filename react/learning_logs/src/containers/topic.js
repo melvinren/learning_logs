@@ -1,28 +1,43 @@
-import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom'; 
-import NewEntry from './addentry';
-import { updateTopic, selectTopic } from '../actions';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { Route, Link } from 'react-router-dom'
+import { updateTopic, selectTopic } from '../actions'
+import { connect } from 'react-redux'
+import moment from 'moment'
 
 class Topic extends Component{
 	constructor(props){
-		super(props);
+		super(props)
 
         this.inputText = null
-		this.updateTopic = this.updateTopic.bind(this);
+		this.updateTopic = this.updateTopic.bind(this)
+
+		this.textarea = null
+		this.addEntry = this.addEntry.bind(this);
     }
     
     componentWillMount(){        
-        this.props.dispatch(selectTopic(this.props.topics, this.props.match.params.topicId))
+		this.props.dispatch(selectTopic(this.props.topics, this.props.match.params.topicId))		
 	}
 
 	updateTopic(){
 		if(!this.inputText || !this.inputText.value){
 			return;
 		}
-        const { dispatch, topic } = this.props
+        const { dispatch, topic, history } = this.props
         topic.text = this.inputText.value
-        dispatch(updateTopic(topic))
+        dispatch(updateTopic(topic)).then(()=> history.goBack())
+	}
+
+	addEntry(){
+		if(!this.textarea || !this.textarea.value){
+			return;
+		}
+
+		const newentry = { text: this.textarea.value, date: moment().format("YYYY-MM-DD HH:mm:ss")}
+		const { topic, dispatch } = this.props
+		topic.entries = topic.entries || []
+		topic.entries.push(newentry)
+		dispatch(updateTopic(topic)).then(()=>this.textarea.value="")
 	}
 
 	render(){		
@@ -35,7 +50,7 @@ class Topic extends Component{
 		if(add || edit){
 			return (
 				<div>
-					<input type="text" ref={input=> this.inputText = input } /><button onClick={this.updateTopic}>{btnTxt}</button>
+					<input type="text" ref={input=> (this.inputText = input) && (add ? "" : input.value = topic.text) } /><button onClick={this.updateTopic}>{btnTxt}</button>
 				</div>
 			)
         }
@@ -60,10 +75,12 @@ class Topic extends Component{
 							: <li>No entry.</li>					
 					}
 					</ul>
-					<Link to={`${match.url}/new_entry`} >Add new entry</Link>
+					<div>
+						<textarea ref={ textarea => this.textarea = textarea } cols="50" rows="5"></textarea>
+						<button onClick = {this.addEntry}>Add new entry</button>
 					</div>
-				)} />				
-				<Route path={`${match.url}/new_entry`}  render = {(props)=> <NewEntry {...props} topic = {topic} />} />
+					</div>
+				)} />
 			</div>
 			);
 		
