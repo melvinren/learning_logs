@@ -19,9 +19,11 @@ function receiveTopics(data) {
 }
 
 // thunk
-function _fetchTopics(filter) {
+function _fetchTopics(filter={pageIndex:1}) {
+    let { pageIndex } = filter
+    pageIndex = pageIndex || 1
     return dispatch => 
-         fetch('/api/topics/get',{
+         fetch(`/api/topics/get/${pageIndex}`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

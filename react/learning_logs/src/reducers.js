@@ -46,7 +46,16 @@ function topics(state =  [], action) {
                 return state
             }
         case RECEIVE_TOPICS:
-            return action.topics;
+            return state.concat(action.topics)
+        default:
+            return state
+    }
+}
+
+function hasMore(state = true, action){
+    switch(action.type){
+        case RECEIVE_TOPICS:
+            return (action.topics && action.topics.length > 0) || false
         default:
             return state
     }
@@ -86,7 +95,8 @@ function newtopic(state = '', action){
 const topicApp = combineReducers({
     topics,
     topic,
-    newtopic
+    newtopic,
+    hasMore
 })
 
 export default topicApp

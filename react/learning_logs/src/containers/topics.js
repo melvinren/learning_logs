@@ -4,11 +4,13 @@ import { fetchTopics, deleteTopic } from '../actions'
 import { Route, Link, Switch } from 'react-router-dom'; 
 import Topic from './topic'
 import '../Topics.css'
+import Scroll from 'react-infinite-scroll-component'
 
 class Topics extends Component{
 	constructor(props){
         super(props)
         this.deleteTopic = this.deleteTopic.bind(this);
+        this.pageIndex = 1;
 	}
 
 	componentWillMount(){        
@@ -17,16 +19,27 @@ class Topics extends Component{
 
 	deleteTopic(topicId){		
 		this.props.dispatch(deleteTopic(topicId))
-	}
+    }
+    
+    loadMoreData(){
+        this.pageIndex++
+        this.props.dispatch(fetchTopics({pageIndex: this.pageIndex}))
+    }
 
 	render(){        
-        const { topics, match } = this.props        
+        const { topics, match, hasMore } = this.props        
         return (
-        <div className="topics">
-            <h4><Link to={match.url} >Topics</Link></h4>
+        <div className="topics">            
+            <Link to={match.url} ><strong>Topics</strong></Link>
             <Route exact path={match.url} render = {()=>(
-                <div className="topics_wrap">
+                <div className="topics_wrap">                    
                     <Link to={`${match.url}/new_topic`} className="btn btn_add" >Add topic</Link>
+                    <Scroll 
+                        next = {()=>this.loadMoreData()}
+                        hasMore={hasMore}
+                        loader={<h4>Loading...</h4>}
+                        endMessage={<h4>没有更多数据了</h4>}
+                    >
                     <ul>				
                     {						
                         topics && topics.length 
@@ -50,6 +63,7 @@ class Topics extends Component{
                         : <li>No topics have been added yet.</li>					
                     }
                     </ul>
+                    </Scroll>
                 </div>
             )} />
             <Switch>
@@ -62,10 +76,10 @@ class Topics extends Component{
 }
 
 const mapStateToProps = state => {        
-
-    const { topics } = state.topicApp    
+    const { topics, hasMore } = state.topicApp        
     return {
-        topics
+        topics,
+        hasMore
     }
 }
 
