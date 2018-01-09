@@ -15,7 +15,7 @@ class Topic extends Component{
 		this.addEntry = this.addEntry.bind(this);
     }
     
-    componentWillMount(){        
+    componentWillMount(){
 		this.props.dispatch(selectTopic(this.props.topics, this.props.match.params.topicId))		
 	}
 
@@ -49,8 +49,9 @@ class Topic extends Component{
 		const btnTxt = add ? "Add" : "Save";
 		if(add || edit){
 			return (
-				<div>
-					<input type="text" ref={input=> (this.inputText = input) && (add ? "" : input.value = topic.text) } /><button onClick={this.updateTopic}>{btnTxt}</button>
+				<div className="ml15 mt15">
+					<input type="text" className="int" ref={input=> (this.inputText = input) && (add ? "" : input.value = topic.text) } />
+					<div className={add? "btn btn_add" : "btn btn_save"} onClick={this.updateTopic}>{btnTxt}</div>
 				</div>
 			)
         }
@@ -59,8 +60,8 @@ class Topic extends Component{
 			return (<div>Donot have this topic.</div>)
 		}
 		return (			
-			<div>
-				<p key={topic._id}><strong><Link to={match.url}>{topic.text}</Link></strong></p>
+			<div className="ml15">
+				<p key={topic._id}><Link to={match.url}>{topic.text}</Link></p>
 				<Route path={match.url} render = {()=>(
 					<div>
 					<ul>
@@ -68,7 +69,7 @@ class Topic extends Component{
 						topic.entries && topic.entries.length
 							? topic.entries.map(entry => (
 								<li key={entry.date}>
-									<p>{entry.date}</p>
+									<small>{entry.date}</small>
 									<p>{entry.text}</p>
 								</li>
 								))
@@ -76,8 +77,8 @@ class Topic extends Component{
 					}
 					</ul>
 					<div>
-						<textarea ref={ textarea => this.textarea = textarea } cols="50" rows="5"></textarea>
-						<button onClick = {this.addEntry}>Add new entry</button>
+						<textarea className="mint" ref={ textarea => this.textarea = textarea }></textarea>
+						<div className="btn btn_add" onClick = {this.addEntry}>Add entry</div>
 					</div>
 					</div>
 				)} />

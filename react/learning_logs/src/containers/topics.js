@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchTopics, deleteTopic } from '../actions'
+import { fetchTopics, deleteTopic, clearTopics } from '../actions'
 import { Route, Link, Switch } from 'react-router-dom'; 
 import Topic from './topic'
 import '../Topics.css'
@@ -15,7 +15,11 @@ class Topics extends Component{
 
 	componentWillMount(){        
         this.props.dispatch(fetchTopics())
-	}
+    }
+    
+    componentWillUnmount(){
+        this.props.dispatch(clearTopics())
+    }
 
 	deleteTopic(topicId){		
 		this.props.dispatch(deleteTopic(topicId))
@@ -27,13 +31,15 @@ class Topics extends Component{
     }
 
 	render(){        
-        const { topics, match, hasMore } = this.props        
+        const { topics, match, hasMore } = this.props
         return (
         <div className="topics">            
-            <Link to={match.url} ><strong>Topics</strong></Link>
+            <Link className="ml15" to={match.url} ><strong>Topics</strong></Link>
             <Route exact path={match.url} render = {()=>(
-                <div className="topics_wrap">                    
-                    <Link to={`${match.url}/new_topic`} className="btn btn_add" >Add topic</Link>
+                <div className="topics_wrap">   
+                    <div className="ml15">                 
+                        <Link to={`${match.url}/new_topic`} className="btn btn_add" >Add topic</Link>
+                    </div>
                     <Scroll 
                         next = {()=>this.loadMoreData()}
                         hasMore={hasMore}
@@ -46,7 +52,10 @@ class Topics extends Component{
                         ? topics.map(topic => (                            
                                 <li key={topic._id}>
                                   <div className="topic_wrap">                                    
-                                    <Link to={`${match.url}/${topic._id}`}  className="left">{topic.text}</Link>                                     
+                                    <Link to={`${match.url}/${topic._id}`}  className="left">                                        
+                                        <p>{topic.text}</p>
+                                        <p className="oneline"><small>{topic.entries && topic.entries[0] && topic.entries[0].text}</small></p>
+                                    </Link>                                     
                                     <div className="right">
                                     <Link to={`${match.url}/${topic._id}/edit`} className="btn btn_edit">
                                         <span>EDIT</span>

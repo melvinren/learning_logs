@@ -4,6 +4,7 @@ import './App.css';
 import Home from './Home';
 // import Topics from './Topics';
 import { Route, Link } from 'react-router-dom';
+import FullLoading from './containers/fullscreenloading'
 
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter } from 'react-router-redux'
@@ -22,7 +23,6 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        {}
         <ConnectedRouter history={history}>
         <div className="App">
           <div className="App-header">
@@ -40,7 +40,8 @@ class App extends Component {
           <Route exact path='/' component={Home} />    
           <Route path='/about' render = {() => <div><h2>About</h2></div>} />
           <Route path='/topics' component = {Topics}/>        
-        </div>      
+          {<FullLoading />}
+        </div>              
         </ConnectedRouter>
       </Provider>
     );

@@ -6,7 +6,10 @@ import {
     SELECT_TOPIC,
     RECEIVE_TOPICS,
     NEW_TOPIC,
-    UPDATE_TOPIC
+    UPDATE_TOPIC,
+    CLEAR_TOPICS,
+    SHOW_FULL_LOADING,
+    HIDE_FULL_LOADING
 } from './actions'
 
 function topics(state =  [], action) {
@@ -47,6 +50,8 @@ function topics(state =  [], action) {
             }
         case RECEIVE_TOPICS:
             return state.concat(action.topics)
+        case CLEAR_TOPICS:
+            return []
         default:
             return state
     }
@@ -65,7 +70,7 @@ function topic(state = {}, action){
     switch(action.type){
         case SELECT_TOPIC:
             if(action.topicId){
-                return action.topics.find(t=> t._id === action.topicId)
+                return action.topics.find(t=> t._id === action.topicId) || null
             }else{
                 return  { _id: '', text: '' }
             }       
@@ -92,11 +97,23 @@ function newtopic(state = '', action){
     }
 }
 
+function fullloading(state = false, action){
+    switch(action.type){
+        case SHOW_FULL_LOADING:
+            return true
+        case HIDE_FULL_LOADING:
+            return false
+        default:
+            return state
+    }
+}
+
 const topicApp = combineReducers({
     topics,
     topic,
     newtopic,
-    hasMore
+    hasMore,
+    fullloading
 })
 
 export default topicApp
