@@ -5,6 +5,7 @@ import Home from './Home';
 // import Topics from './Topics';
 import { Route, Link } from 'react-router-dom';
 import FullLoading from './containers/fullscreenloading'
+import Toast from './containers/toast'
 
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter } from 'react-router-redux'
@@ -41,6 +42,7 @@ class App extends Component {
           <Route path='/about' render = {() => <div><h2>About</h2></div>} />
           <Route path='/topics' component = {Topics}/>        
           {<FullLoading />}
+          {<Toast />}
         </div>              
         </ConnectedRouter>
       </Provider>

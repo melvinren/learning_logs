@@ -57,13 +57,11 @@ class Topics extends Component{
                                         <p className="oneline"><small>{topic.entries && topic.entries[0] && topic.entries[0].text}</small></p>
                                     </Link>                                     
                                     <div className="right">
-                                    <Link to={`${match.url}/${topic._id}/edit`} className="btn btn_edit">
-                                        <span>EDIT</span>
-                                        <i className="icon">E</i>
+                                    <Link to={`${match.url}/${topic._id}/edit`} className="btn_edit">
+                                        EDIT
                                     </Link>
-                                    <a className="btn btn_delete" onClick={ (e) => this.deleteTopic(topic._id) }>
-                                        <span>DELETE</span>
-                                        <i className="icon">X</i>
+                                    <a className="btn_delete" onClick={ (e) => this.deleteTopic(topic._id) }>
+                                        DELETE
                                     </a>
                                     </div>
                                   </div>

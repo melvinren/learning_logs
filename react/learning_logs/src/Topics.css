@@ -52,10 +52,16 @@ ul>li{
     color: #404040;
 }
 .topic_wrap .right{    
-    width:220px;
+    /* width:220px; */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 5px;
+}
+.topic_wrap .right a{    
+    border-radius: 4px;
+    margin:0 2px;
+    cursor: pointer;
 }
 
 .btn{
@@ -168,4 +174,19 @@ ul>li{
 }
 .mt15{
     margin-top: 15px;
+}
+.toast{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);        
+    transition: all 1s ease;
+    opacity: 0;    
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+.toast-a{
+    opacity: 1;
 }

@@ -17,6 +17,11 @@ export const UPDATE_TOPIC = "UPDATE_TOPIC"
 export const SHOW_FULL_LOADING = "SHOW_FULL_LOADING"
 export const HIDE_FULL_LOADING = "HIDE_FULL_LOADING"
 
+export const SHOW_TOAST = "SHOW_TOAST"
+export const SHOW_ANI_TOAST = "SHOW_ANI_TOAST"
+export const HIDE_ANI_TOAST = "HIDE_ANI_TOAST"
+export const HIDE_TOAST = "HIDE_TOAST"
+
 function receiveTopics(data) {
     return { type: RECEIVE_TOPICS, topics: data.topics }
 }
@@ -130,9 +135,27 @@ function _updateTopic(topic){
 			return response.json()
 		}).then((json)=>{		
             dispatch(hideFullLoading())	
-            return dispatch({ type: UPDATE_TOPIC, success:json.success, topic: json.topics && json.topics[0] })
+            dispatch(showToast(json.success === 1 ? 'success':'error'))
+            dispatch(showAniToast())
+            return new Promise((resolve)=>{
+                setTimeout(()=>{
+                    dispatch(hideAniToast())
+                    setTimeout(() => {
+                        dispatch(hideToast())
+                        resolve(dispatch({ type: UPDATE_TOPIC, success:json.success, topic: json.topics && json.topics[0] }))
+                    }, 500);
+                }, 1000)
+            })
         }).catch(() => {
             dispatch(hideFullLoading())	
+            dispatch(showToast('error'))
+            dispatch(showAniToast())
+            setTimeout(()=>{
+                dispatch(hideAniToast())
+                setTimeout(() => {
+                    dispatch(hideToast())
+                }, 1000);
+            }, 1000)
         })
     }
 }
@@ -151,4 +174,17 @@ export function showFullLoading(){
 }
 export function hideFullLoading(){
     return { type: HIDE_FULL_LOADING }
+}
+
+export function showToast(message){
+    return { type: SHOW_TOAST, message }
+}
+export function showAniToast(){
+    return { type: SHOW_ANI_TOAST }
+}
+export function hideAniToast(){
+    return { type: HIDE_ANI_TOAST }
+}
+export function hideToast(){
+    return { type: HIDE_TOAST }
 }

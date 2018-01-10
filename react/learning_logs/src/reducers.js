@@ -9,7 +9,11 @@ import {
     UPDATE_TOPIC,
     CLEAR_TOPICS,
     SHOW_FULL_LOADING,
-    HIDE_FULL_LOADING
+    HIDE_FULL_LOADING,
+    SHOW_TOAST,
+    SHOW_ANI_TOAST,
+    HIDE_ANI_TOAST,
+    HIDE_TOAST
 } from './actions'
 
 function topics(state =  [], action) {
@@ -108,12 +112,28 @@ function fullloading(state = false, action){
     }
 }
 
+function toast(state = {show: false, message:'', className:''}, action ){
+    switch(action.type){
+        case SHOW_TOAST:
+            return {...state, show: true, message: action.message }
+        case SHOW_ANI_TOAST:
+            return {...state, className:'toast-a'}        
+        case HIDE_ANI_TOAST:
+            return {...state, className:''}
+        case HIDE_TOAST:
+            return {...state, show:false }
+        default:
+            return state
+    }
+}
+
 const topicApp = combineReducers({
     topics,
     topic,
     newtopic,
     hasMore,
-    fullloading
+    fullloading,
+    toast
 })
 
 export default topicApp
