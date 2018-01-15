@@ -1,12 +1,14 @@
 <template>
   <div class="topics">
       <div class="newtopic">
-        <input type="text" v-model="newtopic" /><input v-on:click="addTopic" type="button" value="add" />
+        <router-link :to="{ name: 'NewTopic' }">Add Topic</router-link>
       </div>
       <p class="title">All topics</p>
       <ul v-if="count>0">
-          <li v-for="item in items" :key="item._id">
+          <li v-for="item in topics" :key="item._id">
               <router-link :to="{ name: 'Topic', params: { id: item._id , item:item }}">{{item.text}}</router-link>
+              <router-link :to="{ name: 'EditTopic', params: { item:item }}">EDIT</router-link>
+              <button v-on:click="deleteTopic(item._id)">DELETE</button>
           </li>
           <li>
             <span v-for="i in pages" :key="i"><router-link :to="{ name: 'Topics', params: { pageIndex: i }}">{{ i }}</router-link></span>
@@ -18,46 +20,24 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'Topics',
-  data () {
-    return { items: [], count: 0, pages: 0, newtopic: '' }
-  },
+  computed: mapGetters([
+    'topics',
+    'count',
+    'pages'
+  ]),
   created: function () {
     this.loadTopics()
   },
   methods: {
     loadTopics: function () {
       const pageIndex = this.$route.params.pageIndex || 1
-      axios.post('/api/topics/get/' + pageIndex)
-            .then((response) => {
-              if (response.data && response.data.count) {
-                this.items = response.data.topics
-                this.count = response.data.count
-                this.pages = Math.ceil(this.count / 10)
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-              this.data = { items: [] }
-            })
+      this.$store.dispatch('fetchTopics', {pageIndex})
     },
-    addTopic: function (e) {
-      if (this.newtopic) {
-        const topic = { text: this.newtopic }
-        axios.post('/api/topic', topic)
-          .then((response) => {
-            if (response.data && response.data.success === 1) {
-              this.loadTopics()
-              this.newtopic = ''
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
-    }
+    ...mapActions(['deleteTopic'])
   },
   watch: {
     '$route' (to, from) {

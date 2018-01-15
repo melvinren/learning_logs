@@ -30,6 +30,18 @@ export default new Router({
       name: 'Topic',
       component: Topic,
       props: true
+    },
+    {
+      path: '/newtopic',
+      name: 'NewTopic',
+      component: Topic,
+      props: { add: true }
+    },
+    {
+      path: '/edittopic',
+      name: 'EditTopic',
+      component: Topic,
+      props: { edit: true }
     }
   ]
 })
