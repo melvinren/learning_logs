@@ -21,7 +21,7 @@ const actions = {
     return axios.post('/api/topic', topic)
             .then((response) => {
               if (response.data && response.data.success === 1) {
-                const updatetopic = (response.data.topics && response.data.topics[0]) || null
+                const updatetopic = (response.data.topics && response.data.topics[0]) || topic
                 commit(UPDATE_TOPIC_SUCCESS, updatetopic)
               } else {
                 commit(UPDATE_TOPIC_FAIL)
@@ -39,7 +39,6 @@ const actions = {
     commit(SHOW_TOPIC, topic)
   },
   edittopic ({commit}, topic) {
-    console.log(topic)
     commit(EDIT_TOPIC, topic)
   }
 }

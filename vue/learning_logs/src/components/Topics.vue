@@ -4,19 +4,21 @@
         <router-link :to="{ name: 'NewTopic' }">Add Topic</router-link>
       </div>
       <p class="title">All topics</p>
-      <ul v-if="count>0">
-          <li v-for="item in topics" :key="item._id">
+      <div v-if="count>0">
+        <transition-group name="t-list" tag="ul">
+          <li v-for="item in topics" :key="item._id" class="t-item">
               <router-link :to="{ name: 'Topic', params: { id: item._id , item:item }}">{{item.text}}</router-link>
               <router-link :to="{ name: 'EditTopic', params: { item:item }}">EDIT</router-link>
               <button v-on:click="deleteTopic(item._id)">DELETE</button>
           </li>
-          <li>
+        </transition-group>
+          <p>
             <span v-for="i in pages" :key="i"><router-link :to="{ name: 'Topics', params: { pageIndex: i }}">{{ i }}</router-link></span>
-          </li>          
-      </ul>
-      <ul v-else>
-          <li>No topic. You can add a new topic.</li>
-      </ul>
+          </p>          
+      </div>
+      <div v-else>
+          No topic. You can add a new topic.
+      </div>
   </div>
 </template>
 <script>
@@ -80,6 +82,16 @@ ul>li>span{
   margin-left: 5%;
   width: 300px;
   padding: 10px 0;
+}
+.t-item {
+  transition: all 1s;
+}
+.t-list-enter, .t-list-leave-to {
+  opacity: 0;
+  transform: translateX(100%)
+}
+.t-list-leave-active {
+  position: absolute;
 }
 </style>
 

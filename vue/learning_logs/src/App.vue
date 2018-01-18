@@ -7,7 +7,9 @@
       <div class="item"><router-link :to="{name:'About'}">About</router-link></div>
     </div>    
     <hr/>
+    <transition name="slide">
     <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -45,4 +47,21 @@ a.router-link-exact-active{
   font-weight: bold;
   color: #08f087;
 }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.slide-enter-active, .slide-leave-active {
+  transition: all 1s ease;
+}
+.slide-enter{
+  transform: translateX(-100%)
+}
+.slide-leave-to {
+  transform: translateX(200%);
+  position: absolute;
+}
+
 </style>

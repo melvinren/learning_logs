@@ -8,13 +8,15 @@
       </div>
       <div v-else-if="topic">      
         <p><strong>Topic: </strong>{{ topic.text }}</p>
-        <ul v-if="hasEntry">
-            <li v-for="entry in topic.entries" :key="entry._id">
-          <p>{{ entry.date}}</p>
-          <p>{{ entry.text }}</p>
-        </li>
-        </ul>
-        <ul v-else>No entry. You can add a entry.</ul>	  
+        <div v-if="hasEntry">
+          <transition-group name="list" tag="ul">
+            <li v-for="entry in topic.entries" :key="entry.text">
+              <p>{{ entry.date}}</p>
+              <p>{{ entry.text }}</p>          
+            </li>
+          </transition-group>
+        </div>
+        <div v-else>No entry. You can add a entry.</div>	  
         <div>
           <textarea v-model="newentry" class="entry_text"></textarea><br/><input type="button" v-on:click="addEntry" class="addbtn" value="Add" />
         </div>
@@ -25,6 +27,7 @@
   </div>
 </template>
 <script>
+import { cloneDeep } from 'lodash'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Topic',
@@ -47,7 +50,7 @@ export default {
   methods: {
     addEntry: function (e) {
       if (this.newentry) {
-        const topic = this.topic
+        const topic = cloneDeep(this.topic)
         const now = new Date()
         const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getMinutes()
         const entry = {
@@ -56,11 +59,9 @@ export default {
         }
         topic.entries = topic.entries || []
         topic.entries.push(entry)
-        this.$store.dispatch('updateTopic', this.topic).then(() => {
+        this.$store.dispatch('updateTopic', topic).then(() => {
           if (this.updateTopicSuccess) {
             this.newentry = ''
-          } else {
-            this.topic.entry.pop()
           }
         })
       }
@@ -91,5 +92,12 @@ export default {
 	font-size: 16px;
 	padding: 5px;
 	width: 60px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(100%);
 }
 </style>
