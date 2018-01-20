@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TopicService } from '../topic.service';
+import { Topic } from '../topic';
 
 @Component({
   selector: 'app-topics',
@@ -7,9 +9,39 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TopicsComponent implements OnInit {
 
-  constructor() { }
+  newtopic: string
 
-  ngOnInit() {
+  topics: Topic[]
+
+  hasTopic() {
+     return this.topics && this.topics.length > 0 || false
   }
 
+  constructor(private topicService:TopicService) { }
+
+  ngOnInit() {
+    this.topicService.getTopics(1).subscribe( data => this.topics = data.topics )
+  }
+
+  addTopic(topic:string): void {
+    if(!topic){
+      return;
+    }
+    let newtopic = new Topic()
+    newtopic.text = topic
+    this.topicService.updateTopic(newtopic).subscribe(data=>{
+      if(data.success === 1) {
+        this.topics.unshift(data.topics[0])
+      }
+    })
+  }
+
+  deleteTopic(topic:Topic): void{
+    const topicId = topic._id
+    this.topicService.deleteTopic(topicId).subscribe(data=>{
+      if(data.success === 1) {
+       this.topics.splice(this.topics.findIndex(t=>t._id === topicId), 1)
+      }
+    })
+  }
 }

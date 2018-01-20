@@ -1,0 +1,15 @@
+.txt{
+    display: block;
+    width: 90%;
+    height: 80px;
+}
+ a {
+    color: #888;
+    text-decoration: none;
+    position: relative;
+    display: block;
+  }
+  
+   a:hover {
+    color:#607D8B;
+  }

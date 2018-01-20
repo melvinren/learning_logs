@@ -8,6 +8,7 @@ a{
     margin: 10px auto;
     font-size: 22px;
     color:#dd0031;
+    border-bottom: solid 1px #d8d5d5;
   }
   .nav .item{
     flex-grow: 1;

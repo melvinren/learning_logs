@@ -1,0 +1,16 @@
+<h3><a routerLink="/topics">All topics</a></h3>
+<div *ngIf="topic">
+  <input [(ngModel)]="topic.text" />
+  <button (click)="saveTopic()">Save</button>
+  <ul *ngIf="topic.entries">
+    <h5>Entries</h5>
+    <li *ngFor="let entry of topic.entries">
+      <p>{{entry.date}}</p>
+      <p>{{entry.text}}</p>
+    </li>
+  </ul>
+  <div>
+    <textarea #entry class="txt"></textarea>
+    <button (click)="addEntry(entry.value); entry.value=''">Add</button>
+  </div>
+</div>
