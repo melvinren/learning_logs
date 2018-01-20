@@ -131,6 +131,35 @@ app.post('/api/topic', (req, res)=>{
     
 })
 
+app.post('/api/topic/get', (req, res)=>{
+    var topic = req.body;
+    if(!topic._id){        
+        console.log('id is empty!')
+        return res.send({"status":"error", "msg": "id is empty!"});        
+    }
+    MongoClient.connect(mongo_url, function(err, db){
+        if(err){
+            db.close();
+            res.send(500, {"error": err, "msg":"connect mongo fail"})
+            return;
+        }
+        
+        var topics = db.collection('topics');            
+        var ObjectID = require('mongodb').ObjectID;
+        topics.findOne(
+                {"_id": new ObjectID(topic._id)}, 
+                (err, topic) =>{
+            if(err){
+                console.log('edit topic error');
+                db.close()
+                res.send('edit topic error')
+            }
+            db.close();
+            res.send(topic);
+        })            
+    });    
+})
+
 app.post('/api/topic/delete', (req, res)=>{
     var topic = req.body;
     if(!topic._id){        
