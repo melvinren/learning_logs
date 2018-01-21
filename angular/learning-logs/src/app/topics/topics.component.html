@@ -1,9 +1,11 @@
 <p>
   Topic name: <input #newtopic /><button (click)="addTopic(newtopic.value); newtopic.value=''">Add</button>
 </p>
-<ul *ngIf="hasTopic" class="topics">
-  <li *ngFor="let topic of topics" >
-    <a routerLink="/topic/{{topic._id}}"><span class="badge">1</span>{{ topic.text }}</a>
+<ul *ngIf="hasTopic" class="topics"
+    infiniteScroll
+		(scrolled)="onScroll()" >
+  <li *ngFor="let topic of topics; index as i" >
+    <a routerLink="/topic/{{topic._id}}"><span class="badge">{{(i+1)}}</span>{{ topic.text }}</a>
     <button class="button delete" title="delete topic" (click)="deleteTopic(topic)">x</button>
   </li>
 </ul>

@@ -13,6 +13,8 @@ export class TopicsComponent implements OnInit {
 
   topics: Topic[]
 
+  pageIndex = 1
+
   hasTopic() {
      return this.topics && this.topics.length > 0 || false
   }
@@ -20,7 +22,7 @@ export class TopicsComponent implements OnInit {
   constructor(private topicService:TopicService) { }
 
   ngOnInit() {
-    this.topicService.getTopics(1).subscribe( data => this.topics = data.topics )
+    this.topicService.getTopics(this.pageIndex).subscribe( data => this.topics = data.topics )
   }
 
   addTopic(topic:string): void {
@@ -41,6 +43,15 @@ export class TopicsComponent implements OnInit {
     this.topicService.deleteTopic(topicId).subscribe(data=>{
       if(data.success === 1) {
        this.topics.splice(this.topics.findIndex(t=>t._id === topicId), 1)
+      }
+    })
+  }
+
+  onScroll(): void {
+    this.pageIndex++
+    this.topicService.getTopics(this.pageIndex).subscribe( data => {
+      if (data.topics.length){
+        this.topics = this.topics.concat(data.topics)        
       }
     })
   }

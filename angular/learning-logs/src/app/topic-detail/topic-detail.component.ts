@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TopicService } from '../topic.service';
 import { Topic } from '../topic';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
+import { cloneDeep } from 'lodash'
 
 @Component({
   selector: 'app-topic-detail',
@@ -27,8 +28,7 @@ export class TopicDetailComponent implements OnInit {
     if(!entry){
       return;
     }
-    // const topic = cloneDeep(this.topic)
-    const topic = this.topic;
+    const topic = cloneDeep(this.topic);
     const now = new Date()
     const date = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getMinutes()
     const entryobj = {
@@ -39,7 +39,7 @@ export class TopicDetailComponent implements OnInit {
     topic.entries.push(entryobj)
     this.topicService.updateTopic(topic).subscribe(data=>{
       if(data.success === 1) {
-        console.log('success')
+        this.topic = topic
       }
     })
   }
